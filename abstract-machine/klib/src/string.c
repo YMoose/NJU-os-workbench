@@ -5,7 +5,14 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 size_t strlen(const char *s) {
-  panic("Not implemented");
+  assert(s!=NULL);
+  const char* end = s;
+  while(end)
+  {
+    end++;
+  }
+
+  return end - s;  
 }
 
 char *strcpy(char *dst, const char *src) {
@@ -29,7 +36,15 @@ int strncmp(const char *s1, const char *s2, size_t n) {
 }
 
 void *memset(void *s, int c, size_t n) {
-  panic("Not implemented");
+  assert(n>0);
+  size_t i = 0;
+  char *mem = (char*)s;
+  for (; i < n; i++)
+  {
+    *mem = (unsigned char)c;
+    mem++;
+  }
+  return s;
 }
 
 void *memmove(void *dst, const void *src, size_t n) {
