@@ -15,6 +15,15 @@ static inline void puts(const char *s) {
   for (; *s; s++) putch(*s);
 }
 
+bool wait_escape() {
+  AM_INPUT_KEYBRD_T event = { .keycode = AM_KEY_NONE };
+  ioe_read(AM_INPUT_KEYBRD, &event);
+  if (event.keycode == AM_KEY_ESCAPE && event.keydown) {
+    return true;
+  }
+  return false;
+}
+
 void print_key() {
   AM_INPUT_KEYBRD_T event = { .keycode = AM_KEY_NONE };
   ioe_read(AM_INPUT_KEYBRD, &event);
@@ -64,7 +73,8 @@ int main(const char *args) {
 
   puts("Press any key to see its key code...\n");
   while (1) {
-    print_key();
+    if (wait_escape())
+      break;
   }
   return 0;
 }

@@ -27,6 +27,7 @@ _start:
   mov     $0x0112, %cx
   mov     $0x4000, %di
   int     $0x10
+
   mov     $0x4f02, %ax
   mov     $0x4112, %bx
   int     $0x10
