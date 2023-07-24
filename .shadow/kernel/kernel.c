@@ -86,7 +86,8 @@ int main(const char *args) {
   puts(args);  // make run mainargs=xxx
   puts("\"\n");
 
-  splash();
+  display_bmp((const char*)_home_temp_cover_bmp, _home_temp_cover_bmp_len);
+  // splash();
 
   puts("Press any key to see its key code...\n");
   while (1) {
