@@ -3,6 +3,9 @@
 #include <klib.h>
 #include <klib-macros.h>
 
+#include "graph_data.h"
+#include "data_conv.h"
+
 #define SIDE 16
 
 static int w, h;  // Screen size
@@ -45,6 +48,20 @@ static void draw_tile(int x, int y, int w, int h, uint32_t color) {
   }
   ioe_write(AM_GPU_FBDRAW, &event);
 }
+
+void display_bmp(const char* bmp_data, size_t bmp_data_len)
+{
+  AM_GPU_CONFIG_T info = {0};
+  ioe_read(AM_GPU_CONFIG, &info);
+  w = info.width;
+  h = info.height;
+
+  unsigned int bmp_width = ptr_le_u32(bmp_data+18);
+  unsigned int bmp_high = ptr_le_u32(bmp_data+22);
+  w = bmp_width;
+  h = bmp_high;
+}
+
 
 void splash() {
   AM_GPU_CONFIG_T info = {0};
