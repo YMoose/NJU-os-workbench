@@ -65,7 +65,7 @@ void display_bmp(const char* bmp_data, size_t bmp_data_len)
   const char* cur_ptr = bmp_data + DIB_HEADER_OFFSET;
   for (int x = 0; x <= w && x <= bmp_width; x++){
     for (int y = 0; y <= h && y <= bmp_high; y++){
-      draw_tile(x,y,1,1,ptr_le_u32(cur_ptr));
+      draw_tile(x,y,1,1,ptr_le_u24(cur_ptr));
       cur_ptr += RGB_PIXEL_SIZE;
     }
     cur_ptr += padding_size;
