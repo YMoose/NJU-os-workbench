@@ -61,10 +61,8 @@ void display_bmp(const char* bmp_data, size_t bmp_data_len)
   unsigned int bmp_high = ptr_le_u32(bmp_data+22);
   unsigned int row_size = ROUNDUP(RGB_PIXEL_SIZE * bmp_width, 4);
   unsigned int padding_size = row_size - RGB_PIXEL_SIZE * bmp_width;
-#define BITMAP_FILE_HEADER_SIZE 14
-#define DIB_HEADER_SIZE 54 
-  unsigned int offset = BITMAP_FILE_HEADER_SIZE+DIB_HEADER_SIZE;
-  const char* cur_ptr = bmp_data + offset;
+#define DIB_HEADER_OFFSET 54 
+  const char* cur_ptr = bmp_data + DIB_HEADER_OFFSET;
   for (int x = 0; x <= w && x <= bmp_width; x++){
     for (int y = 0; y <= h && y <= bmp_high; y++){
       draw_tile(x,y,1,1,ptr_le_u32(cur_ptr));
