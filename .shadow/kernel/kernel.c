@@ -56,12 +56,22 @@ void display_bmp(const char* bmp_data, size_t bmp_data_len)
   w = info.width;
   h = info.height;
 
-//   unsigned int bmp_width = ptr_le_u32(bmp_data+18);
-//   unsigned int bmp_high = ptr_le_u32(bmp_data+22);
-//   unsigned int row_size = ROUNDUP(24*bmp_width, 32) >> 3;
-// #define BITMAP_FILE_HEADER_SIZE 14
-// #define DIB_HEADER_SIZE 54 
-//   unsigned int offset = BITMAP_FILE_HEADER_SIZE+DIB_HEADER_SIZE;
+#define RGB_PIXEL_SIZE 3
+  unsigned int bmp_width = ptr_le_u32(bmp_data+18);
+  unsigned int bmp_high = ptr_le_u32(bmp_data+22);
+  unsigned int row_size = ROUNDUP(RGB_PIXEL_SIZE * bmp_width, 4);
+  unsigned int padding_size = row_size - RGB_PIXEL_SIZE * bmp_width;
+#define BITMAP_FILE_HEADER_SIZE 14
+#define DIB_HEADER_SIZE 54 
+  unsigned int offset = BITMAP_FILE_HEADER_SIZE+DIB_HEADER_SIZE;
+  const char* cur_ptr = bmp_data + offset;
+  for (int x = 0; x <= w && x <= bmp_width; x++){
+    for (int y = 0; y <= h && y <= bmp_high; y++){
+      draw_tile(x,y,1,1,ptr_le_u32(cur_ptr));
+      cur_ptr += RGB_PIXEL_SIZE;
+    }
+    cur_ptr += padding_size;
+  }
 
 
 }
