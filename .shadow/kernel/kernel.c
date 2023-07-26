@@ -56,10 +56,14 @@ void display_bmp(const char* bmp_data, size_t bmp_data_len)
   w = info.width;
   h = info.height;
 
-  unsigned int bmp_width = ptr_le_u32(bmp_data+18);
-  unsigned int bmp_high = ptr_le_u32(bmp_data+22);
-  w = bmp_width;
-  h = bmp_high;
+//   unsigned int bmp_width = ptr_le_u32(bmp_data+18);
+//   unsigned int bmp_high = ptr_le_u32(bmp_data+22);
+//   unsigned int row_size = ROUNDUP(24*bmp_width, 32) >> 3;
+// #define BITMAP_FILE_HEADER_SIZE 14
+// #define DIB_HEADER_SIZE 54 
+//   unsigned int offset = BITMAP_FILE_HEADER_SIZE+DIB_HEADER_SIZE;
+
+
 }
 
 
