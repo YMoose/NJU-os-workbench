@@ -63,8 +63,8 @@ void display_bmp(const char* bmp_data, size_t bmp_data_len)
   unsigned int padding_size = row_size - RGB_PIXEL_SIZE * bmp_width;
 #define DIB_HEADER_OFFSET 54 
   const char* cur_ptr = bmp_data + DIB_HEADER_OFFSET;
-  for (int x = 0; x <= w && x <= bmp_width; x++){
-    for (int y = 0; y <= h && y <= bmp_high; y++){
+  for (int y = 0; y <= h && y <= bmp_high; y++){
+    for (int x = 0; x <= w && x <= bmp_width; x++){
       unsigned int color = ptr_le_u24(cur_ptr);
       draw_tile(x,y,1,1,color);
       cur_ptr += RGB_PIXEL_SIZE;
