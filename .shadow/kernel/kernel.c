@@ -53,6 +53,7 @@ void display_bmp(const char* bmp_data, size_t bmp_data_len)
 {
   AM_GPU_CONFIG_T info = {0};
   ioe_read(AM_GPU_CONFIG, &info);
+  unsigned int factor, temp_factor =0;
   w = info.width;
   h = info.height;
 
@@ -63,33 +64,50 @@ void display_bmp(const char* bmp_data, size_t bmp_data_len)
   unsigned int padding_size = row_size - RGB_PIXEL_SIZE * bmp_width;
 #define DIB_HEADER_OFFSET 54 
   const char* cur_ptr = bmp_data + DIB_HEADER_OFFSET;
-  for (int y = bmp_high < h ? bmp_high : h; y > 0; y--){
-    for (int x = bmp_width < w ? bmp_width : w; x > 0; x-- ){
-      unsigned int color = ptr_le_u24(cur_ptr);
-      draw_tile(x,y,1,1,color);
-      cur_ptr += RGB_PIXEL_SIZE;
-    }
-    cur_ptr += padding_size;
-  }
+  
 
-
-}
-
-
-void splash() {
-  AM_GPU_CONFIG_T info = {0};
-  ioe_read(AM_GPU_CONFIG, &info);
-  w = info.width;
-  h = info.height;
-
-  for (int x = 0; x * SIDE <= w; x ++) {
-    for (int y = 0; y * SIDE <= h; y++) {
-      if ((x & 1) ^ (y & 1)) {
-        draw_tile(x * SIDE, y * SIDE, SIDE, SIDE, 0xffffff); // white
+  // bmp size is big than os window
+  if(bmp_width > w || bmp_high > h)
+  {
+    temp_factor = bmp_width / w;
+    factor = bmp_high / h;
+    factor = factor < temp_factor ? temp_factor : factor;
+    bmp_width = bmp_width / factor;
+    bmp_high = bmp_high / factor;
+    for (int y = (h+bmp_high)>>1 ; y > (h-bmp_high)>>1; y--)
+    {
+      for (int x = (w+bmp_width)>>1 ; x > (w-bmp_width)>>1; x--)
+      {
+        unsigned int color = ptr_le_u24(cur_ptr);
+        draw_tile(x,y,1,1,color);
+        cur_ptr += factor*RGB_PIXEL_SIZE;
       }
+      cur_ptr += factor*padding_size;
     }
   }
+  else 
+  { // bmp size is small than os window
+    temp_factor = w / bmp_width;
+    factor = h /bmp_high;
+    factor = factor < temp_factor ? factor : temp_factor;
+    bmp_width = bmp_width * factor;
+    bmp_high = bmp_high * factor;
+    for (int y = (h+bmp_high)>>1 ; y > (h-bmp_high)>>1; y-= factor)
+    {
+      for (int x = (w+bmp_width)>>1 ; x > (w-bmp_width)>>1; x-= factor)
+      {
+        unsigned int color = ptr_le_u24(cur_ptr);
+        draw_tile(x,y,factor,factor,color);
+        cur_ptr += RGB_PIXEL_SIZE;
+      }
+      cur_ptr += padding_size;
+    }
+
+  }
+
 }
+
+//  
 
 // Operating system is a C program!
 int main(const char *args) {
@@ -102,7 +120,7 @@ int main(const char *args) {
   display_bmp((const char*)_home_temp_cover_bmp, _home_temp_cover_bmp_len);
   // splash();
 
-  puts("Press any key to see its key code...\n");
+  puts("Press Esc to quit...\n");
   while (1) {
     if (wait_escape())
       break;
