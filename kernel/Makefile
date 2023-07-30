@@ -17,3 +17,7 @@ graph_data: $(GRAPH_PATH)
 	@echo "#define GRAPH_DATA_H" >> $(GRAPH_DATA_H)
 	@xxd -i $(GRAPH_PATH) >> $(GRAPH_DATA_H)
 	@echo "#endif /* GRAPH_DATA_H */" >> $(GRAPH_DATA_H)
+
+.PHONY: clean_graph_data
+clean_graph_data:
+	@rm -f $(GRAPH_DATA_H)
